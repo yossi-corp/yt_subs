@@ -1,0 +1,89 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row =>
+                    row.some(cell => cell !== '' && cell !== null && cell !== undefined)
+                );
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service - Homelab Playlist Automation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+    <header class="bg-blue-600 text-white py-4">
+        <div class="container mx-auto px-4">
+            <h1 class="text-2xl font-bold">Homelab Playlist Automation</h1>
+        </div>
+    </header>
+    <main class="container mx-auto px-4 py-8">
+        <section class="bg-white shadow-md rounded-lg p-6">
+            <h2 class="text-xl font-semibold mb-4">Terms of Service</h2>
+            <p class="mb-4">
+                Effective Date: April 16, 2025
+            </p>
+            <p class="mb-4">
+                Homelab Playlist Automation is a personal Python script developed and used exclusively by its creator to automate the addition of YouTube videos to a private "homelab" playlist. These Terms of Service apply to the application, which is not available for public use.
+            </p>
+            <h3 class="text-lg font-semibold mb-2">Usage</h3>
+            <p class="mb-4">
+                This application is for personal use only by its developer. It is not offered as a service, product, or application for use by others. No other individuals or entities are permitted to access or use this application.
+            </p>
+            <h3 class="text-lg font-semibold mb-2">Scope of Service</h3>
+            <p class="mb-4">
+                The application uses the YouTube Data API to:
+            </p>
+            <ul class="list-disc pl-6 mb-4">
+                <li>Fetch recent videos from specific YouTube channels I am subscribed to.</li>
+                <li>Add those videos to my private "homelab" playlist.</li>
+            </ul>
+            <p class="mb-4">
+                The application runs on my private homelab server and is not hosted or accessible publicly.
+            </p>
+            <h3 class="text-lg font-semibold mb-2">Liability</h3>
+            <p class="mb-4">
+                As a personal-use application, Homelab Playlist Automation is provided "as is" for my own use. I am solely responsible for its operation and maintenance. No warranties or guarantees are provided, as the application is not intended for external use.
+            </p>
+            <h3 class="text-lg font-semibold mb-2">Compliance</h3>
+            <p class="mb-4">
+                The application complies with Google’s YouTube Data API terms and conditions. It uses OAuth 2.0 for secure authentication and does not store or share any user data beyond what is required for its operation.
+            </p>
+            <h3 class="text-lg font-semibold mb-2">Contact</h3>
+            <p class="mb-4">
+                For questions about these Terms of Service, please contact me at [your-email@example.com]. Note that this application is for personal use only and not available to others.
+            </p>
+            <a href="index.html" class="text-blue-600 hover:underline">Back to Home</a>
+        </section>
+    </main>
+    <footer class="bg-gray-200 py-4">
+        <div class="container mx-auto px-4 text-center text-gray-600">
+            &copy; 2025 Homelab Playlist Automation. For personal use only.
+        </div>
+    </footer>
+</body>
+</html>

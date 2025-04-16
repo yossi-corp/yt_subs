@@ -1,0 +1,89 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row =>
+                    row.some(cell => cell !== '' && cell !== null && cell !== undefined)
+                );
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - Homelab Playlist Automation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+    <header class="bg-blue-600 text-white py-4">
+        <div class="container mx-auto px-4">
+            <h1 class="text-2xl font-bold">Homelab Playlist Automation</h1>
+        </div>
+    </header>
+    <main class="container mx-auto px-4 py-8">
+        <section class="bg-white shadow-md rounded-lg p-6">
+            <h2 class="text-xl font-semibold mb-4">Privacy Policy</h2>
+            <p class="mb-4">
+                Effective Date: April 16, 2025
+            </p>
+            <p class="mb-4">
+                Homelab Playlist Automation is a personal Python script created and used solely by its developer for managing a private YouTube playlist. This application is not available to the public, and no other users have access to it. This Privacy Policy outlines how the application handles data.
+            </p>
+            <h3 class="text-lg font-semibold mb-2">Data Collection</h3>
+            <p class="mb-4">
+                The application uses the YouTube Data API to access my YouTube account’s subscriptions and playlist data. It does not collect, store, or process any personal data from other users, as it is designed for my personal use only.
+            </p>
+            <h3 class="text-lg font-semibold mb-2">Data Usage</h3>
+            <p class="mb-4">
+                The application accesses the following data via the YouTube Data API:
+            </p>
+            <ul class="list-disc pl-6 mb-4">
+                <li>My YouTube subscriptions to identify new videos from specific channels.</li>
+                <li>My "homelab" playlist to check for existing videos and add new ones.</li>
+            </ul>
+            <p class="mb-4">
+                This data is used solely to automate the addition of videos to my playlist and is not shared, stored externally, or used for any other purpose.
+            </p>
+            <h3 class="text-lg font-semibold mb-2">Data Sharing</h3>
+            <p class="mb-4">
+                As a personal-use application, no data is shared with third parties. The application runs on my private homelab server and does not transmit data to external services beyond the YouTube Data API.
+            </p>
+            <h3 class="text-lg font-semibold mb-2">Security</h3>
+            <p class="mb-4">
+                The application uses OAuth 2.0 for secure authentication with my YouTube account. Access tokens are managed securely using Doppler, a secrets management tool, and are stored on my private server with strong authentication measures (e.g., passkeys and MFA).
+            </p>
+            <h3 class="text-lg font-semibold mb-2">Contact</h3>
+            <p class="mb-4">
+                For questions about this Privacy Policy, please contact me at [your-email@example.com]. Note that this application is for personal use only and not available to others.
+            </p>
+            <a href="index.html" class="text-blue-600 hover:underline">Back to Home</a>
+        </section>
+    </main>
+    <footer class="bg-gray-200 py-4">
+        <div class="container mx-auto px-4 text-center text-gray-600">
+            &copy; 2025 Homelab Playlist Automation. For personal use only.
+        </div>
+    </footer>
+</body>
+</html>

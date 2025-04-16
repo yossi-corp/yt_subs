@@ -1,0 +1,75 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row =>
+                    row.some(cell => cell !== '' && cell !== null && cell !== undefined)
+                );
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homelab Playlist Automation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+    <header class="bg-blue-600 text-white py-4">
+        <div class="container mx-auto px-4">
+            <h1 class="text-2xl font-bold">Homelab Playlist Automation</h1>
+        </div>
+    </header>
+    <main class="container mx-auto px-4 py-8">
+        <section class="bg-white shadow-md rounded-lg p-6">
+            <h2 class="text-xl font-semibold mb-4">Welcome to Homelab Playlist Automation</h2>
+            <p class="mb-4">
+                Homelab Playlist Automation is a personal Python script designed to automatically add new videos from specific YouTube channels to my private "homelab" playlist. This application is for my personal use only and is not available to the public.
+            </p>
+            <p class="mb-4">
+                The script uses the YouTube Data API to fetch recent videos from my subscribed channels and adds them to my playlist based on my predefined preferences. It runs daily on my homelab server to keep my playlist updated.
+            </p>
+            <h3 class="text-lg font-semibold mb-2">Key Details</h3>
+            <ul class="list-disc pl-6 mb-4">
+                <li><strong>Purpose:</strong> Automate the organization of YouTube videos into my personal "homelab" playlist.</li>
+                <li><strong>User Base:</strong> Single user (myself).</li>
+                <li><strong>Authentication:</strong> Uses OAuth 2.0 to securely access my YouTube account.</li>
+                <li><strong>Data Usage:</strong> Only accesses my YouTube subscriptions and playlist data, with no data shared or stored externally.</li>
+            </ul>
+            <p class="mb-4">
+                This application is a personal project and is not intended for commercial use or distribution.
+            </p>
+            <div class="flex space-x-4">
+                <a href="privacy.html" class="text-blue-600 hover:underline">Privacy Policy</a>
+                <a href="terms.html" class="text-blue-600 hover:underline">Terms of Service</a>
+            </div>
+        </section>
+    </main>
+    <footer class="bg-gray-200 py-4">
+        <div class="container mx-auto px-4 text-center text-gray-600">
+            &copy; 2025 Homelab Playlist Automation. For personal use only.
+        </div>
+    </footer>
+</body>
+</html>
